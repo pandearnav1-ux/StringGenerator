@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>React String Generator</title>
+    <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+        body 
+        {
+            background-color:#f1f5f9;
+            color:#0f172a;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            padding:16px;
+            margin:0;
+            font-family:sans-serif;
+        }
+        .gradWrap 
+        {
+            width:100%;
+            /* Instagram style gradient */
+            background:linear-gradient(45deg,#fdf497 0%,#fdf497 5%,#fd5949 45%,#d6249f 60%,#285AEB 90%);
+            padding:4px; 
+            border-radius:1.25rem;
+            box-sizing:border-box;
+            box-shadow:0 20px 25px -5px rgb(0 0 0 / 0.1);
+        }
+        .mainBox 
+        {
+            width:100%;
+            background-color:#ffffff; /* Total white background as requested */
+            border-radius:1.1rem;
+            padding:32px;
+            box-sizing:border-box;
+        }
+        .titleBox 
+        {
+            text-align:center;
+            margin-bottom:2vw;
+        }
+        .title 
+        {
+            font-size:1.5rem;
+            font-weight:700;
+            color:#0f172a;
+            margin:0;
+        }
+        .displayRow 
+        {
+            display:flex;
+            gap:8px;
+            background-color:#f8fafc;
+            padding:16px;
+            border-radius:0.75rem;
+            border:1px solid #e2e8f0;
+            align-items:center;
+            margin-bottom:2vw;
+        }
+        .outputField 
+        {
+            width:100%;
+            background:transparent;
+            color:#059669;
+            font-size: 1.125rem;
+            font-weight:600;
+            border:none;
+        }
+        .actionBtn 
+        {
+            padding:8px 16px;
+            border-radius:0.5rem;
+            font-weight:600;
+            font-size:0.75rem;
+            text-transform: uppercase;
+            border:1px solid;
+            cursor:pointer;
+            transition:all 0.2s;
+        }
+        .configContainer 
+        {
+            display:flex;
+            flex-direction:column;
+            gap:16px;
+            margin-bottom:24px;
+        }
+        .sliderBox 
+        {
+            display:flex;
+            flex-direction:column;
+            gap:8px;
+        }
+        .sliderLabelRow 
+        {
+            display:flex;
+            justify-content:space-between;
+            font-size:0.875rem;
+            font-weight:500;
+        }
+        .labelDim 
+        {
+            color:#9eabbc;
+        }
+        .counterNum 
+        {
+            color:#22624e;
+            font-family:monospace;
+            font-size:1rem;
+            font-weight:600;
+        }
+        .rangeInput 
+        {
+            width:100%;
+            height:8px;
+            background-color:#e2e8f0;
+            border-radius:0.5rem;
+            cursor:pointer;
+        }
+        .divLine 
+        {
+            border: 0;
+            border-top: 1px solid #e2e8f0;
+            margin: 8px 0;
+        }
+        .optionsGrid 
+        {
+            display:grid;
+            gap: 16px;
+        }
+        .gridLabel 
+        {
+            display:flex;
+            align-items:center;
+            gap:12px;
+            background-color:#f8fafc;
+            padding:12px;
+            border-radius:0.75rem;
+            border:1px solid #e2e8f0;
+            cursor:pointer;
+        }
+        .checkInput 
+        {
+            width:1rem;
+            height:1rem;
+            border-radius:0.25rem;
+            cursor:pointer;
+        }
+        .labelText 
+        {
+            font-size:0.875rem;
+            font-weight:500;
+            color:#576f92;
+        }
+        .submitBtn 
+        {
+            width:100%;
+            padding:16px 0;
+            background:linear-gradient(45deg, #fdf497 0%, #fd5949 45%, #d6249f 60%);
+            color:#ffffff;
+            font-weight:700;
+            font-size:1rem;
+            border-radius:0.75rem;
+            border:none;
+            cursor:pointer;
+            box-shadow:0 4px 6px -1px rgb(253 89 73 / 0.2);
+        }
+    </style>
+</head>
+<body>
+
+    <div id="root"></div>
+    <script type="text/babel">
+        const{useState,useCallback,useEffect}=React;
+        function StringGenerator() 
+        {
+            const[length, setLength]=useState(12);
+            const[includeUpper, setIncludeUpper]=useState(true);
+            const[includeLower, setIncludeLower]=useState(true);
+            const[includeNum, setIncludeNum]=useState(true);
+            const[includeSym, setIncludeSym]=useState(false);
+            const[generatedString, setGeneratedString]=useState('');
+            const[copied, setCopied]=useState(false);
+            const generateString = useCallback(() => {
+                let charPool='';
+                if(includeUpper)charPool+='ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+                if(includeLower)charPool+='abcdefghijklmnopqrstuvwxyz';
+                if(includeNum)charPool+='0123456789';
+                if(includeSym)charPool+='!@#$%^&*()_+~`|}{[]:;?><,./-=';
+                // Agar pool khali hai toh value change karke return karo
+                if(charPool==='') 
+                {
+                    setGeneratedString('Select at least one option below!');
+                    return;
+                }
+                let result='';
+                for(let i=0;i<length;i++) 
+                {
+                    const rand=Math.floor(Math.random()*charPool.length);
+                    result+=charPool.charAt(rand);
+                }
+                setGeneratedString(result);
+                setCopied(false); 
+            },[length, includeUpper, includeLower, includeNum, includeSym]);
+
+            useEffect(() => {
+                generateString();
+            }, [generateString]);
+            const copyToClipboard = () => {
+                if(generatedString&&!generatedString.startsWith('Select')) 
+                {
+                    navigator.clipboard.writeText(generatedString);
+                    setCopied(true);
+                    setTimeout(() => setCopied(false), 2000); 
+                }
+            };
+            return(
+                <div class="gradWrap">
+                    <div class="mainBox">
+                        <div class="titleBox">
+                            <h1 class="title">String Generator</h1>
+                        </div>
+                        <div class="displayRow">
+                            <input type="text" class="outputField" readOnly placeholder="Click Generate..." value={generatedString}/>
+                            <button onClick={copyToClipboard} disabled={generatedString.startsWith('Select')} class="actionBtn">
+                                {copied?'Copied!':'Copy'}
+                            </button>
+                        </div>
+                        <div class="configContainer">
+                            <div class="sliderBox">
+                                <div class="sliderLabelRow">
+                                    <span class="labelDim">String Length</span>
+                                    <span class="counterNum">{length}</span>
+                                </div>
+                                <input type="range" min="4" max="64" value={length} onChange={(e) => setLength(parseInt(e.target.value))} class="rangeInput"/>
+                            </div>
+                            <hr class="divLine"/>
+                            <div class="optionsGrid">
+                                <label class="gridLabel">
+                                    <input type="checkbox" checked={includeUpper} onChange={(e) => setIncludeUpper(e.target.checked)} class="checkInput" style={{ accentColor: '#d6249f' }}/>
+                                    <span class="labelText">A-Z Uppercase</span>
+                                </label>
+                                <label class="gridLabel">
+                                    <input type="checkbox" checked={includeLower} onChange={(e) => setIncludeLower(e.target.checked)} class="checkInput" style={{ accentColor: '#d6249f' }}/>
+                                    <span class="labelText">a-z Lowercase</span>
+                                </label>
+                                <label class="gridLabel">
+                                    <input type="checkbox" checked={includeNum} onChange={(e) => setIncludeNum(e.target.checked)} class="checkInput" style={{ accentColor: '#d6249f' }}/>
+                                    <span class="labelText">0-9 Numbers</span>
+                                </label>
+                                <label class="gridLabel">
+                                    <input type="checkbox" checked={includeSym} onChange={(e) => setIncludeSym(e.target.checked)} class="checkInput" style={{ accentColor: '#d6249f' }}/>
+                                    <span class="labelText">#!$ Symbols</span>
+                                </label>
+                            </div>
+                        </div>
+                        <button onClick={generateString} class="submitBtn">
+                            Generate String
+                        </button>
+
+                    </div>
+                </div>);
+        }
+        const root=ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<StringGenerator />);
+    </script>
+</body>
+</html>
